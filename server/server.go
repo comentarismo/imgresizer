@@ -5,13 +5,18 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/pat"
+	cache "github.com/pmylund/go-cache"
+
+	"time"
 )
 
 var (
 	router *pat.Router
+	Cache *cache.Cache
 )
 
 func init() {
+	Cache = cache.New(30*time.Minute, 60*time.Second)
 }
 
 //NewServer return pointer to new created server object
