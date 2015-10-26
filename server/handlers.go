@@ -10,15 +10,14 @@ import (
 	resize "github.com/nfnt/resize"
 
 	"strconv"
+	"strings"
 )
 
 var (
 	templates = template.Must(template.ParseFiles(
 		"upload.html",
 	))
-//	imageQuality = jpeg.Options{95}
 )
-
 
 func ImgHandler(w http.ResponseWriter, r *http.Request){
 	b := &bytes.Buffer{}
@@ -47,14 +46,14 @@ func ImgPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	withStr := r.Form["with"]
-	log.Println("with: ", withStr)
-	if len(withStr) == 0 {
+	widthStr := r.Form["width"]
+	log.Println("width: ", widthStr)
+	if len(widthStr) == 0 {
 		log.Println("404 not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	with, err := strconv.ParseUint(withStr[0],10,32)
+	width, err := strconv.ParseUint(widthStr[0],10,32)
 	if err != nil {
 		log.Println("404 not found")
 		w.WriteHeader(http.StatusNotFound)
@@ -95,9 +94,9 @@ func ImgPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Doing HTTP GET")
 
-	res, err := http.Get(url[0])
+	res, err := http.Get(strings.Trim(url[0]," "))
 	if err != nil {
-		log.Fatalf("http.Get -> %v", err)
+		log.Printf("http.Get -> %v", err)
 		return
 	}
 
@@ -106,12 +105,13 @@ func ImgPostHandler(w http.ResponseWriter, r *http.Request) {
 	// decode jpeg into image.Image
 	img, err := jpeg.Decode(res.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
 
-	// resize to width 1000 using Lanczos resampling
+	// resize to width height using Lanczos resampling
 	// and preserve aspect ratio
-	m := resize.Resize(uint(with), uint(height), img, resize.Lanczos3)
+	m := resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
 
 	w.Header().Set("Content-Length", fmt.Sprint(res.ContentLength))
 	w.Header().Set("Content-Type", res.Header.Get("Content-Type"))
@@ -127,20 +127,16 @@ func ImgPostHandler(w http.ResponseWriter, r *http.Request) {
 func AllowOrigin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-	//	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	//TODO: add origin validation
 	if origin := r.Header.Get("Origin"); origin != "" {
 		w.Header().Set("Access-Control-Allow-Origin", origin)
 	}
-	//	w.Header().Set("Access-Control-Allow-Origin","http://192.168.0.22:3001,http://")
 }
 
 // writeError renders the error in the HTTP response.
 func writeError(w http.ResponseWriter, r *http.Request, err error) {
-//	w.Errorf("Error: %v", err)
 	w.WriteHeader(http.StatusInternalServerError)
 	if err := templates.ExecuteTemplate(w, "error.html", err); err != nil {
-//		w.Errorf("templates.ExecuteTemplate: %v", err)
 	}
 }
