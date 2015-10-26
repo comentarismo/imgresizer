@@ -1,0 +1,47 @@
+<html class="wf-museoslab-n3-active wf-bree-n7-active wf-keplerstd-n3-active wf-active">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Imgfling.com - Find and Create Awesome Images</title>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="description"
+          content="Fling through memes, gifs, pie charts and other funny images. Make your own images with our Meme Generator or Animated GIF Generator.">
+</head>
+
+<script src="/static/js/jquery-15.min.js"></script>
+<link href="/static/css/style.css" rel="stylesheet" type="text/css">
+<body>
+
+<div class="grid">
+    <div class="col-8-12">
+
+        <div style="margin-left: 27px;" class="wrapper">
+            <p>Upload an image</p>
+
+            <form action="/img/" method="POST">
+
+                URL:
+                <input type="text" id="url" name="url" required="true">
+                <br/>
+                With:
+                <input type="text" id="with" name="with" required="true">
+                <br/>
+                Height:
+                <input type="text" id="height" name="height" required="true">
+                Quality:
+                <input type="text" id="quality" name="quality" required="true">
+
+                <br/>
+                <input type="submit" value="Transform">
+            </form>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+</html>
