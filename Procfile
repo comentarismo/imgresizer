@@ -1,1 +1,1 @@
-web: imgfling
+web: imgresizer
