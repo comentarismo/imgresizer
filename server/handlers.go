@@ -34,7 +34,7 @@ func ImgHandler(w http.ResponseWriter, r *http.Request){
 
 func ImgPostHandler(w http.ResponseWriter, r *http.Request) {
 	//allow http requests
-	AllowOrigin(w, r)
+//	AllowOrigin(w, r)
 
 	r.ParseForm()  //Parse url parameters passed, then parse the response packet for the POST body (request body)
 	fmt.Println(r.Form) // print information on server side.
