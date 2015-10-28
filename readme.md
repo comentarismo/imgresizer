@@ -17,3 +17,9 @@ $ GOPATH=/opt/gocode/ godep go build main.go
 
 run executable (OSX)
 `./main`
+
+
+```
+$ nohup ./imgresizer & .
+```
+

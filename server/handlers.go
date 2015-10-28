@@ -129,7 +129,7 @@ func ImgPostHandler(w http.ResponseWriter, r *http.Request) {
 	// and preserve aspect ratio
 	m := resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
 
-	w.Header().Set("Content-Length", fmt.Sprint(res.ContentLength))
+//	w.Header().Set("Content-Length", fmt.Sprint(res.ContentLength))
 	w.Header().Set("Content-Type", res.Header.Get("Content-Type"))
 
 	o := jpeg.Options{quality}
