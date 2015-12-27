@@ -8,15 +8,48 @@ import (
 	cache "github.com/pmylund/go-cache"
 
 	"time"
+	"gopkg.in/redis.v3"
+	"os"
+	"strings"
 )
 
 var (
 	router *pat.Router
 	Cache *cache.Cache
+//	Client *redis.Client
+	Client *redis.ClusterClient
 )
 
+var REDIS_HOST = os.Getenv("redis_host")
+var REDIS_PASS = os.Getenv("redis_pass")
+
 func init() {
+	if REDIS_HOST == "" {
+		REDIS_HOST = "82.196.8.72:7000"
+//		REDIS_HOST = ":6379"
+	}
+
+	if REDIS_PASS == "" {
+//		REDIS_PASS = "go3322321"
+		REDIS_PASS = ""
+	}
+
 	Cache = cache.New(30*time.Minute, 60*time.Second)
+
+//	Client = redis.NewClient(&redis.Options{
+//		Addr:     REDIS_HOST,
+//		Password: REDIS_PASS, // no password set
+//		DB:       0,  // use default DB
+//	})
+	addrs :=  strings.Split(REDIS_HOST,",")
+	Client = redis.NewClusterClient(&redis.ClusterOptions{
+//		Addrs: []string{"82.196.8.72:7000", "146.185.154.216:7000", "82.196.9.79:7000"},
+		Addrs: addrs,
+		Password: "", // no password set
+	})
+
+	pong, err := Client.Ping().Result()
+	log.Println(pong, err)
 }
 
 //NewServer return pointer to new created server object
@@ -45,6 +78,7 @@ func InitRouting() *pat.Router {
 
 	r.Get("/img/", ImgHandler)
 	r.Post("/img/", ImgPostHandler)
+	r.Post("/r/img/", RedisImgPostHandler)
 
 	s := http.StripPrefix("/static/", http.FileServer(http.Dir("./static/")))
 	r.PathPrefix("/static/").Handler(s)
@@ -54,4 +88,5 @@ func InitRouting() *pat.Router {
 
 	return r
 }
+
 

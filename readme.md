@@ -23,3 +23,14 @@ run executable (OSX)
 $ nohup ./imgresizer & .
 ```
 
+Find PID
+```
+netstat -tulpn | grep 3666
+
+```
+
+Kill with PID
+
+```
+kill -9 PID
+```
