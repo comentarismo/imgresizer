@@ -42,10 +42,12 @@ func init() {
 //		DB:       0,  // use default DB
 //	})
 	addrs :=  strings.Split(REDIS_HOST,",")
+	log.Println("karai")
+	log.Println(addrs)
 	Client = redis.NewClusterClient(&redis.ClusterOptions{
 //		Addrs: []string{"82.196.8.72:7000", "146.185.154.216:7000", "82.196.9.79:7000"},
 		Addrs: addrs,
-		Password: "", // no password set
+		Password: REDIS_PASS, // no password set
 	})
 
 	pong, err := Client.Ping().Result()
