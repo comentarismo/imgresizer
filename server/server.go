@@ -10,14 +10,13 @@ import (
 	"time"
 	"gopkg.in/redis.v3"
 	"os"
-	"strings"
 )
 
 var (
 	router *pat.Router
 	Cache *cache.Cache
-//	Client *redis.Client
-	Client *redis.ClusterClient
+	Client *redis.Client
+//	Client *redis.ClusterClient
 )
 
 var REDIS_HOST = os.Getenv("redis_host")
@@ -30,25 +29,25 @@ func init() {
 	}
 
 	if REDIS_PASS == "" {
-//		REDIS_PASS = "go3322321"
-		REDIS_PASS = ""
+		REDIS_PASS = "go3322321"
+//		REDIS_PASS = ""
 	}
 
 	Cache = cache.New(30*time.Minute, 60*time.Second)
 
-//	Client = redis.NewClient(&redis.Options{
-//		Addr:     REDIS_HOST,
-//		Password: REDIS_PASS, // no password set
-//		DB:       0,  // use default DB
-//	})
-	addrs :=  strings.Split(REDIS_HOST,",")
-	log.Println("karai")
-	log.Println(addrs)
-	Client = redis.NewClusterClient(&redis.ClusterOptions{
-//		Addrs: []string{"82.196.8.72:7000", "146.185.154.216:7000", "82.196.9.79:7000"},
-		Addrs: addrs,
+	Client = redis.NewClient(&redis.Options{
+		Addr:     REDIS_HOST,
 		Password: REDIS_PASS, // no password set
+		DB:       0,  // use default DB
 	})
+//	addrs :=  strings.Split(REDIS_HOST,",")
+//	log.Println("karai")
+//	log.Println(addrs)
+//	Client = redis.NewClusterClient(&redis.ClusterOptions{
+////		Addrs: []string{"82.196.8.72:7000", "146.185.154.216:7000", "82.196.9.79:7000"},
+//		Addrs: addrs,
+//		Password: REDIS_PASS, // no password set
+//	})
 
 	pong, err := Client.Ping().Result()
 	log.Println(pong, err)
