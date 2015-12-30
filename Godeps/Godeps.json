@@ -1,10 +1,11 @@
 {
 	"ImportPath": "imgresizer",
 	"GoVersion": "go1.4.2",
-	"Packages": [
-		"main.go"
-	],
 	"Deps": [
+		{
+			"ImportPath": "github.com/disintegration/imaging",
+			"Rev": "546cb3c5137b3f1232e123a26aa033aade6b3066"
+		},
 		{
 			"ImportPath": "github.com/gorilla/context",
 			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
@@ -24,6 +25,14 @@
 		{
 			"ImportPath": "github.com/pmylund/go-cache",
 			"Rev": "a122e14c4b8ee69022f62f24ba85cb36ce844366"
+		},
+		{
+			"ImportPath": "golang.org/x/image/bmp",
+			"Rev": "baddd3465a05d84a6d8d3507547a91cb188c81ea"
+		},
+		{
+			"ImportPath": "golang.org/x/image/tiff",
+			"Rev": "baddd3465a05d84a6d8d3507547a91cb188c81ea"
 		},
 		{
 			"ImportPath": "gopkg.in/bsm/ratelimit.v1",

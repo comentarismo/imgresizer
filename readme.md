@@ -34,3 +34,14 @@ Kill with PID
 ```
 kill -9 PID
 ```
+
+
+
+```
+flynn create imgresizer 
+Created imgresizer
+```
+
+```
+flynn log -f
+```

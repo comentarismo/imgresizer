@@ -6,15 +6,19 @@ import (
 	"bytes"
 	"html/template"
 	"fmt"
-	"image/jpeg"
 	"strconv"
 	"strings"
 	"image"
+//    "image/gif"
+    "image/jpeg"
+    "image/png"
 	"time"
 
 	"gopkg.in/redis.v3"
 	resize "github.com/nfnt/resize"
 	cache "github.com/pmylund/go-cache"
+	"io"
+	"github.com/disintegration/imaging"
 )
 
 var (
@@ -120,7 +124,8 @@ func ImgPostHandler(w http.ResponseWriter, r *http.Request) {
 //	log.Println(res)
 
 	// decode jpeg into image.Image
-	img, err := jpeg.Decode(res.Body)
+	img, imgtype, err := image.Decode(res.Body)
+	log.Println(imgtype)
 	if err != nil {
 		log.Println(err)
 		return
@@ -169,12 +174,18 @@ func RedisImgPostHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()  //Parse url parameters passed, then parse the response packet for the POST body (request body)
 	log.Println(r.Form) // print information on server side.
 
-	log.Println("ImgPostHandler")
+	log.Println("RedisImgPostHandler")
 
 	url := r.Form["url"]
+	if len(url) == 0 {
+		log.Println("RedisImgPostHandler width 404 not found")
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
 	log.Println("url: ", url[0])
 	if len(url) == 0 {
-		log.Println("ImgPostHandler url 404 not found")
+		log.Println("RedisImgPostHandler url 404 not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -182,13 +193,13 @@ func RedisImgPostHandler(w http.ResponseWriter, r *http.Request) {
 	widthStr := r.Form["width"]
 	log.Println("width: ", widthStr)
 	if len(widthStr) == 0 {
-		log.Println("ImgPostHandler width 404 not found")
+		log.Println("RedisImgPostHandler width 404 not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	width, err := strconv.ParseUint(widthStr[0],10,32)
+	width, err := strconv.ParseInt(widthStr[0],10,32)
 	if err != nil {
-		log.Println("ImgPostHandler width ParseUint 404 not found")
+		log.Println("RedisImgPostHandler width ParseUint 404 not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
@@ -196,48 +207,48 @@ func RedisImgPostHandler(w http.ResponseWriter, r *http.Request) {
 	heightStr := r.Form["height"]
 	log.Println("height: ", heightStr)
 	if len(heightStr) == 0 {
-		log.Println("ImgPostHandler height 404 not found")
+		log.Println("RedisImgPostHandler height 404 not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	height, err := strconv.ParseUint(heightStr[0],10,32)
+	height, err := strconv.ParseInt(heightStr[0],10,32)
 	if err != nil {
-		log.Println("ImgPostHandler height ParseUint 404 not found")
+		log.Println("RedisImgPostHandler height ParseUint 404 not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	qualityStr := r.Form["quality"]
-	var quality int
-	quality = 30
+//	qualityStr := r.Form["quality"]
+//	var quality int
+//	quality = 30
 
-	log.Println("ImgPostHandler qualityStr: ", qualityStr)
-	if len(qualityStr) != 0 {
-		quality64, err := strconv.ParseInt(qualityStr[0], 10, 32)
-		if err != nil {
-			log.Println("ImgPostHandler qualityStr 404 not found")
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		quality = int(quality64)
-	}
-
-
-	log.Println("ImgPostHandler Check form params --> ok")
+//	log.Println("ImgPostHandler qualityStr: ", qualityStr)
+//	if len(qualityStr) != 0 {
+//		quality64, err := strconv.ParseInt(qualityStr[0], 10, 32)
+//		if err != nil {
+//			log.Println("ImgPostHandler qualityStr 404 not found")
+//			w.WriteHeader(http.StatusNotFound)
+//			return
+//		}
+//		quality = int(quality64)
+//	}
 
 
-	log.Println("ImgPostHandler Verify if is available on cache")
+	log.Println("RedisImgPostHandler Check form params --> ok")
+
+
+	log.Println("RedisImgPostHandler Verify if is available on cache")
 
 	cached, err := Client.Get("ImgPostHandler"+url[0]+widthStr[0]+heightStr[0]).Result()
 	if err == redis.Nil {
-		log.Println("ImgPostHandler"+url[0]+widthStr[0]+heightStr[0]+" does not exists")
+		log.Println("RedisImgPostHandler "+url[0]+widthStr[0]+heightStr[0]+" does not exists on cache")
 	} else if err != nil {
 		panic(err)
 		return
 	} else {
-		log.Println("ImgPostHandler Serve from cache")
-		w.Write([]byte(cached))
+		log.Println("RedisImgPostHandler Serve from cache")
 		w.Header().Set("Content-Type", "image/jpeg")
+		w.Write([]byte(cached))
 		return
 	}
 	//	fmt.Println("unknown type",cached)
@@ -247,42 +258,165 @@ func RedisImgPostHandler(w http.ResponseWriter, r *http.Request) {
 	res, err := http.Get(strings.Trim(url[0]," "))
 	if err != nil {
 		log.Printf("http.Get -> %v", err)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
 	//	log.Println(res)
 
-	// decode jpeg into image.Image
-	img, err := jpeg.Decode(res.Body)
+	img_,imgType, err := image.Decode(res.Body)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	log.Println(imgType)
+	img := imaging.Thumbnail(img_, int(width), int(height), imaging.CatmullRom)
+
+//	img, err := decodeImage(res.Body)
+//	if err || img == nil {
+//		log.Println(err)
+//		w.WriteHeader(http.StatusNotFound)
+//		return
+//	}
+
 
 	// resize to width height using Lanczos resampling
 	// and preserve aspect ratio
-	m := resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
-
-	w.Header().Set("Content-Type", fmt.Sprint(res.ContentLength))
-
-	o := jpeg.Options{quality}
-
-	err = jpeg.Encode(w, m, &o)
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
+//	m := resize.Resize( img, resize.Lanczos3)
+//
+//	w.Header().Set("Content-Type", fmt.Sprint(res.ContentLength))
+//
+//	o := jpeg.Options{quality}
+//
+//	err = jpeg.Encode(w, m, &o)
+//	if err != nil {
+//		log.Println(err)
+//		w.WriteHeader(http.StatusNotFound)
+//		return
+//	}
 	log.Println("ImgPostHandler saving on redis cache")
 
 	buf := new(bytes.Buffer)
-	jpeg.Encode(buf, m, nil)
+	jpeg.Encode(buf, img, nil)
 	send_s3 := buf.Bytes()
 
 	Client.Set("ImgPostHandler"+url[0]+widthStr[0]+heightStr[0], string(send_s3), time.Hour * 24 * 2)
 
+	w.Write([]byte(send_s3))
+	w.Header().Set("Content-Type", "image/jpeg")
+
 	defer r.Body.Close()
 	//	defer res.Close()
 	return
+}
+
+func decodeImage(res io.Reader) (image.Image, error) {
+	// decode jpeg into image.Image
+	config, imgFormat, err := image.DecodeConfig(res)
+	if err != nil {
+		log.Println("error when DecodeConfig into image.Image")
+		log.Println(err)
+//		w.WriteHeader(http.StatusNotFound)
+		return nil,err
+	}
+	log.Println(imgFormat)
+	log.Println(config)
+
+	if imgFormat == "jpeg" {
+		img, err := jpeg.Decode(res)
+		if err != nil {
+			log.Println("error when decoding jpeg into image.Image")
+			log.Println(err)
+			return nil,err
+		}
+		return img,nil
+	}else if imgFormat == "png" {
+//		image.RegisterFormat("jpeg", "jpeg", jpeg.Decode, jpeg.DecodeConfig)
+		img, err := png.Decode(res)
+		if err != nil {
+			log.Println("error when decoding png into image.Image")
+			log.Println(err)
+			return nil,err
+		}
+		return img,nil
+
+	}else {
+		return nil,nil
+	}
+
+//	log.Println(imgtype)
+//	if err != nil {
+//		log.Println("error when decoding jpeg into image.Image")
+//		log.Println(err)
+//		w.WriteHeader(http.StatusNotFound)
+//		return
+//	}
+
+	return nil,nil
+}
+
+func RedisImgGetHandler (w http.ResponseWriter, req *http.Request) {
+	//allow http requests
+	AllowOrigin(w, req)
+
+
+
+//	operator := req.URL.Query().Get(":operator")
+//
+//	key := req.URL.Query().Get(":key")
+//	value := req.URL.Query().Get(":value")
+//
+//	widthStr := req.URL.Query().Get(":width")
+//	heightStr := req.URL.Query().Get(":height")
+//
+//	log.Println("width: ", widthStr)
+//	if len(widthStr) == 0 {
+//		log.Println("ImgPostHandler width 404 not found")
+//		w.WriteHeader(http.StatusNotFound)
+//		return
+//	}
+//
+//	log.Println("height: ", heightStr)
+//	if len(heightStr) == 0 {
+//		log.Println("ImgPostHandler height 404 not found")
+//		w.WriteHeader(http.StatusNotFound)
+//		return
+//	}
+//
+//	width, err := strconv.ParseUint(widthStr,10,32)
+//	if err != nil {
+//		log.Println("ImgPostHandler width ParseUint 404 not found")
+//		w.WriteHeader(http.StatusNotFound)
+//		return
+//	}
+//
+//	height, err := strconv.ParseUint(heightStr,10,32)
+//	if err != nil {
+//		log.Println("ImgPostHandler height ParseUint 404 not found")
+//		w.WriteHeader(http.StatusNotFound)
+//		return
+//	}
+//
+//	qualityStr := req.URL.Query().Get(":quality")
+//	var quality int
+//	quality = 30
+//
+//	log.Println("ImgPostHandler qualityStr: ", qualityStr)
+//	if len(qualityStr) != 0 {
+//		quality64, err := strconv.ParseInt(qualityStr, 10, 32)
+//		if err != nil {
+//			log.Println("ImgPostHandler qualityStr 404 not found")
+//			w.WriteHeader(http.StatusNotFound)
+//			return
+//		}
+//		quality = int(quality64)
+//	}
+//	log.Println("ImgPostHandler Check form params --> ok")
+
+
+	//GET JSON WITH THE URL
+
+
+
 }

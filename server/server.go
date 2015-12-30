@@ -24,7 +24,7 @@ var REDIS_PASS = os.Getenv("redis_pass")
 
 func init() {
 	if REDIS_HOST == "" {
-		REDIS_HOST = "82.196.8.72:7000"
+		REDIS_HOST = "37.139.13.224:6379"
 //		REDIS_HOST = ":6379"
 	}
 
@@ -80,6 +80,7 @@ func InitRouting() *pat.Router {
 	r.Get("/img/", ImgHandler)
 	r.Post("/img/", ImgPostHandler)
 	r.Post("/r/img/", RedisImgPostHandler)
+//	r.Get("/imgbykey/{operator}/{key}/{value}/", RedisImgGetHandler)
 
 	s := http.StripPrefix("/static/", http.FileServer(http.Dir("./static/")))
 	r.PathPrefix("/static/").Handler(s)
