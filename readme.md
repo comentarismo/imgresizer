@@ -9,6 +9,11 @@ run main
 $ GOPATH=/opt/gocode/ godep go run main.go 
 ```
 
+run main g7-box
+```
+$ GOPATH=/opt/gocode/ redis_host=g7-box:6379 godep go run main.go 
+```
+
 build main
 ```
 $ GOPATH=/opt/gocode/ godep go build main.go 
@@ -17,7 +22,7 @@ $ GOPATH=/opt/gocode/ godep go build main.go
 
 run executable (OSX)
 `./main`
-
+ 
 
 ```
 $ nohup ./imgresizer & .
