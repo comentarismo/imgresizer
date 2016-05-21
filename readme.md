@@ -1,17 +1,15 @@
 
-curl test
-```
-curl 'http://localhost:3666/img/' --data 'url=https%3A%2F%2Fimg.washingtonpost.com%2Frf%2Fimage_1484w%2F2010-2019%2FWashingtonPost%2F2015%2F10%2F19%2FNational-Politics%2FImages%2FCongress_Budget-06d04-3776.jpg&width=300&height=400&quality=10' --compressed
-```
-
-run main
-```
-$ GOPATH=/opt/gocode/ godep go run main.go 
-```
 
 run main g7-box
 ```
-$ GOPATH=/opt/gocode/ redis_host=g7-box:6379 godep go run main.go 
+$ GOPATH=/opt/gocode/ REDIS_HOST=g7-box REDIS_PORT=6379 godep go run main.go 
+```
+
+ENV ARGS:
+```
+REDIS_HOST
+REDIS_PASSWORD
+REDIS_PORT
 ```
 
 build main
@@ -49,4 +47,14 @@ Created imgresizer
 
 ```
 flynn log -f
+```
+
+Test PROD
+```
+curl 'http://img.comentarismo.com/r/img/' --data 'url=https%3A%2F%2Fcdn.rt.com%2Ffiles%2F2016.05%2Farticle%2F573b02f4c361881d268b45c5.jpg&width=388&height=395&quality=50'
+```
+
+Test local
+```
+curl 'http://localhost/r/img/' --data 'url=https%3A%2F%2Fcdn.rt.com%2Ffiles%2F2016.05%2Farticle%2F573b02f4c361881d268b45c5.jpg&width=388&height=395&quality=50'
 ```

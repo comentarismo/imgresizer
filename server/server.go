@@ -19,25 +19,28 @@ var (
 //	Client *redis.ClusterClient
 )
 
-var REDIS_HOST = os.Getenv("redis_host")
-var REDIS_PASS = os.Getenv("redis_pass")
+var REDIS_HOST = os.Getenv("REDIS_HOST")
+var REDIS_PASS = os.Getenv("REDIS_PASSWORD")
+var REDIS_PORT = os.Getenv("REDIS_PORT")
 
 func init() {
 	if REDIS_HOST == "" {
-		REDIS_HOST = "37.139.13.224:6379"
-//		REDIS_HOST = ":6379"
+		log.Fatal("env REDIS_HOST is not set")
 	}
 
 	if REDIS_PASS == "" {
-		REDIS_PASS = "go3322321"
-//		REDIS_PASS = ""
+		log.Println("env REDIS_PASS is not set, was this intentional?")
+	}
+
+	if REDIS_PORT == "" {
+		log.Fatal("env REDIS_PORT is not set")
 	}
 
 	Cache = cache.New(30*time.Minute, 60*time.Second)
 
 	Client = redis.NewClient(&redis.Options{
-		Addr:     REDIS_HOST,
-		Password: REDIS_PASS, // no password set
+		Addr:     REDIS_HOST+":"+REDIS_PORT,
+		Password: REDIS_PASS, // password set
 		DB:       0,  // use default DB
 	})
 //	addrs :=  strings.Split(REDIS_HOST,",")

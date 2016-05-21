@@ -178,7 +178,7 @@ func RedisImgPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	url := r.Form["url"]
 	if len(url) == 0 {
-		log.Println("RedisImgPostHandler width 404 not found")
+		log.Println("RedisImgPostHandler url 404 not found")
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
