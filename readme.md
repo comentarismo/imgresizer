@@ -51,10 +51,10 @@ flynn log -f
 
 Test PROD
 ```
-curl 'http://img.comentarismo.com/r/img/' --data 'url=https%3A%2F%2Fcdn.rt.com%2Ffiles%2F2016.05%2Farticle%2F573b02f4c361881d268b45c5.jpg&width=388&height=395&quality=50'
+curl 'http://img.comentarismo.com/r/img/' --data 'url=https://i.ytimg.com/vi/YdOQGkQ1KFs/hqdefault.jpg&width=388&height=395&quality=50'
 ```
 
 Test local
 ```
-curl 'http://localhost/r/img/' --data 'url=https%3A%2F%2Fcdn.rt.com%2Ffiles%2F2016.05%2Farticle%2F573b02f4c361881d268b45c5.jpg&width=388&height=395&quality=50'
+url 'http://localhost:3666/r/img/' --data 'url=https://i.ytimg.com/vi/YdOQGkQ1KFs/hqdefault.jpg&width=380&height=395&quality=50'
 ```
