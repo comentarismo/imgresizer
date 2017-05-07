@@ -1,11 +1,26 @@
 {
 	"ImportPath": "imgresizer",
 	"GoVersion": "go1.7",
-	"GodepVersion": "v74",
+	"GodepVersion": "v79",
 	"Deps": [
 		{
 			"ImportPath": "github.com/disintegration/imaging",
 			"Rev": "546cb3c5137b3f1232e123a26aa033aade6b3066"
+		},
+		{
+			"ImportPath": "github.com/fogleman/gg",
+			"Comment": "v1.0.0-10-gee8994f",
+			"Rev": "ee8994ff90057955c428a5a949da5d064bf3ce6b"
+		},
+		{
+			"ImportPath": "github.com/golang/freetype/raster",
+			"Comment": "release-131-g38b4c39",
+			"Rev": "38b4c392adc5eed94207994c4848fff99f4ac234"
+		},
+		{
+			"ImportPath": "github.com/golang/freetype/truetype",
+			"Comment": "release-131-g38b4c39",
+			"Rev": "38b4c392adc5eed94207994c4848fff99f4ac234"
 		},
 		{
 			"ImportPath": "github.com/gorilla/context",
@@ -29,15 +44,39 @@
 		},
 		{
 			"ImportPath": "golang.org/x/image/bmp",
-			"Rev": "baddd3465a05d84a6d8d3507547a91cb188c81ea"
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
+		},
+		{
+			"ImportPath": "golang.org/x/image/draw",
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
+		},
+		{
+			"ImportPath": "golang.org/x/image/font",
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
+		},
+		{
+			"ImportPath": "golang.org/x/image/font/basicfont",
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
+		},
+		{
+			"ImportPath": "golang.org/x/image/font/gofont/goregular",
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
+		},
+		{
+			"ImportPath": "golang.org/x/image/math/f64",
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
+		},
+		{
+			"ImportPath": "golang.org/x/image/math/fixed",
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
 		},
 		{
 			"ImportPath": "golang.org/x/image/tiff",
-			"Rev": "baddd3465a05d84a6d8d3507547a91cb188c81ea"
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
 		},
 		{
 			"ImportPath": "golang.org/x/image/tiff/lzw",
-			"Rev": "baddd3465a05d84a6d8d3507547a91cb188c81ea"
+			"Rev": "e2d0a9f0e684ecd17e2f185e3d055cb94811f22e"
 		},
 		{
 			"ImportPath": "gopkg.in/bsm/ratelimit.v1",

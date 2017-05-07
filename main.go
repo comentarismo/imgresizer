@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"imgresizer/server"
+	"os"
 )
 
 //Host eg: localhost:3001 ; or website.com
