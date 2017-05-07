@@ -31,6 +31,11 @@ $ GOPATH=/opt/gocode/ REDIS_HOST=g7-box REDIS_PORT=6379 godep go run main.go
 ```
 
 
+## References:
+```
+* https://github.com/llgcode/draw2d
+* https://github.com/fogleman/gg
+```
 
 ENV ARGS:
 ```
