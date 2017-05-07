@@ -3,7 +3,7 @@ function imgresizer(image, slug, width, height, quality, cb) {
         $(image).remove();
     } else {
         //http post
-        var host = "http://img.comentarismo.com/r";
+        var host = "http://img.comentarismo.com";
 
         if (document.location.hostname.indexOf("localhost") !== -1) {
             host = "http://localhost:3666";
