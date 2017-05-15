@@ -145,7 +145,11 @@ func MemeHandler(w http.ResponseWriter, r *http.Request) {
 
 	dc.SetRGB(0, 0, 0)
 	s := "ONE DOES NOT SIMPLY"
-	n := 6 // "stroke" size
+	sheader := "Qualquer Header text"
+	smiddle := "Test Middle text"
+	sfooter := "Test Footer text"
+	n := 8 // "stroke" size
+	const S =1024
 	for dy := -n; dy <= n; dy++ {
 		for dx := -n; dx <= n; dx++ {
 			if dx*dx+dy*dy >= n*n {
@@ -154,12 +158,25 @@ func MemeHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			x := float64(width) + float64(dx)
 			y := float64(height) + float64(dy)
+			xsheader := S/2 + float64(dx)
+			ysheader := S/12 + float64(dy)
+			xsmiddle := S/2 + float64(dx)
+			ysmiddle := S/2.5 + float64(dy)
+			xsfooter := S/2 + float64(dx)
+			ysfooter := S/1.4 + float64(dy)
 			dc.DrawStringAnchored(s, x, y, 0.5, 0.5)
+			dc.DrawStringAnchored(sheader, xsheader, ysheader, 0.5, 0.5)
+			dc.DrawStringAnchored(smiddle, xsmiddle, ysmiddle, 0.5, 0.5)
+			dc.DrawStringAnchored(sfooter, xsfooter, ysfooter, 0.5, 0.5)
 		}
-	}
+	}	
 
 	dc.SetRGB(1, 1, 1)
 	dc.DrawStringAnchored(s, float64(width), float64(height), 0.5, 0.5)
+	dc.DrawStringAnchored(sheader, S/2, S/12, 0.5, 0.5)
+	dc.DrawStringAnchored(smiddle, S/2, S/2.5, 0.5, 0.5)
+	dc.DrawStringAnchored(sfooter, S/2, S/1.4, 0.5, 0.5)
+
 	buf := new(bytes.Buffer)
 
 	dc.EncodePNG(buf)
