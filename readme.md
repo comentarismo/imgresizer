@@ -1,4 +1,4 @@
-Golang IMG Rezier Project
+Comentarismo IMG Resizer Project - Golang <3
 
 ## About
 
